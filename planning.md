@@ -1,10 +1,10 @@
 1. Initialize the app if this is the first run:
    - [ ] Create project configuration:
-     - [ ] Absolute location of the server binaries
-     - [ ] Absolute location of the resources folder
+     - [x] Absolute location of the server binaries
+     - [x] Absolute location of the resources folder
      - [ ] Define startup arguments for dev environment (Optional)
      - [ ] Define startup arguments for release environment (Optional)
-     - [ ] FiveM server file release type to download and system type is linux or windows (Default latest)
+     - [x] FiveM server file release type to download and system type is linux or windows (Default latest)
      - [ ] Server file auto update interval (Default one week but can be disabled)
      - [ ] Define dev server "server.cfg" options
      - [ ] Define release server "server.cfg" options (Optional but required before compiling a release)
