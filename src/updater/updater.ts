@@ -1,13 +1,12 @@
+import ora from "ora";
 import path from "path";
 import { loadConfig } from "../config/load-config.js";
-import { ensureDir, fsu } from "../utils/file-utils.js";
+import { fsu } from "../utils/file-utils.js";
 import { getTmpDir } from "../utils/paths.js";
 import { fetchLatestArtifact, ReleaseTier } from "./artifacts.js";
-import { loadUpdateState, saveUpdateState } from "./state.js";
-import { tmpdir } from "os";
 import { downloadFile } from "./download.js";
 import { installArtifact } from "./install.js";
-import ora from "ora";
+import { loadUpdateState, saveUpdateState } from "./state.js";
 
 export interface CheckOptions {
   force?: boolean;
@@ -54,11 +53,13 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
   const platform = config.fiveM.devPlatform;
   const tier =
     opts.tierOverride ?? mapConfigToTier(config.fiveM.releaseChannel);
+
   const spinner = ora({
     text: "Fetching artifacts...",
     hideCursor: true,
     indent: 1,
   });
+
   spinner.start();
   const latest = await fetchLatestArtifact(platform, tier);
 
@@ -88,7 +89,7 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
   }
 
   const tmpDir = await getTmpDir();
-  await ensureDir(tmpDir);
+  await fsu.ensureDir(tmpDir);
 
   const archivePath = path.join(
     tmpDir,
