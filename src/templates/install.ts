@@ -9,6 +9,7 @@ import { fsu } from "../utils/file-utils.js";
 import { getTemplatesDir } from "../utils/paths.js";
 import { AppSpinner } from "../utils/spinner-utils.js";
 import { ARTIFACT_TEMPLATE_ZIP, TemplateType } from "./artifacts.js";
+import { isResourceFolder } from "../utils/resource-utils.js";
 
 export async function isTemplateChildPathValid(
   relativePath: string,
@@ -17,7 +18,7 @@ export async function isTemplateChildPathValid(
   const config = await loadConfig();
 
   // Check relative path formatting
-  if (!/^(\[[a-zA-Z0-9-_]+\][\/\\])*([a-zA-Z0-9-_/])+$/.test(relativePath)) {
+  if (!isResourceFolder(relativePath)) {
     return {
       valid: false,
       reason:
