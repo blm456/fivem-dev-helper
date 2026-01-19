@@ -27,6 +27,11 @@ export async function getDevStatePath() {
   return path.join(await getDevDir(), LAYOUT.FILES.DEV_SERVER_STATE);
 }
 
+export async function getServerBinaries() {
+  const cfg = await loadConfig();
+  return cfg.paths.serverBinaries;
+}
+
 export async function getResourcesDir() {
   const cfg = await loadConfig();
   return cfg.paths.resources;

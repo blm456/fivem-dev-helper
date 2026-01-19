@@ -2,20 +2,18 @@ import { input } from "@inquirer/prompts";
 import chalk from "chalk";
 import extractZip from "extract-zip";
 import path from "path";
-import { loadConfig } from "../config/load-config.js";
 import { templateMenu } from "../menus/template-menu.js";
 import { selectFolder } from "../utils/file-selector.js";
 import { fsu } from "../utils/file-utils.js";
-import { getTemplatesDir } from "../utils/paths.js";
+import { getResourcesDir, getTemplatesDir } from "../utils/paths.js";
+import { isResourceFolder } from "../utils/resource-utils.js";
 import { AppSpinner } from "../utils/spinner-utils.js";
 import { ARTIFACT_TEMPLATE_ZIP, TemplateType } from "./artifacts.js";
-import { isResourceFolder } from "../utils/resource-utils.js";
 
 export async function isTemplateChildPathValid(
   relativePath: string,
 ): Promise<{ valid: true } | { valid: false; reason: string }> {
-  // Load config for resources folder
-  const config = await loadConfig();
+  const resourceDir = await getResourcesDir();
 
   // Check relative path formatting
   if (!isResourceFolder(relativePath)) {
@@ -27,7 +25,7 @@ export async function isTemplateChildPathValid(
   }
 
   // Get the absolute location from the relative path
-  const absolutePath = path.join(config.paths.resources, relativePath);
+  const absolutePath = path.join(resourceDir, relativePath);
   await fsu.ensureDir(absolutePath);
 
   // Check if the path is empty
@@ -60,16 +58,15 @@ export async function installTemplate(type: TemplateType, target: string) {
 
 /** Guides through the folder selection process for a template */
 export async function selectTemplateLocation() {
-  // Load config for resources folder
-  const config = await loadConfig();
+  const resourceDir = await getResourcesDir();
 
   // Prompt for base path input
-  const selection = await selectFolder(config.paths.resources);
+  const selection = await selectFolder(resourceDir);
 
   // Check base path is in resources folder
-  const relativePath = path.relative(config.paths.resources, selection.path);
+  const relativePath = path.relative(resourceDir, selection.path);
   if (
-    selection.path !== config.paths.resources && // Selection is not the resources folder
+    selection.path !== resourceDir && // Selection is not the resources folder
     relativePath.startsWith("..") // And the selection relative to resources folder has to go up a level
   ) {
     throw new Error(
@@ -85,10 +82,7 @@ export async function selectTemplateLocation() {
 
   // Check the sub-folder is formatted correctly and empty
   const pathValid = await isTemplateChildPathValid(
-    path.relative(
-      config.paths.resources,
-      path.join(selection.path, installRelative),
-    ),
+    path.relative(resourceDir, path.join(selection.path, installRelative)),
   );
   if (!pathValid.valid) {
     throw new Error(
