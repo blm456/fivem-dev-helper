@@ -5,7 +5,7 @@ export const LAYOUT = {
     CACHE: "cache",
     CFG_FILES: "cfg-presets",
     COMPILED: "compiled",
-    BINARIES: "binaries",
+    TEMPLATES: "templates",
     TYPES: "types",
     TMP: "tmp",
     DEV_RUNTIME: "dev",
@@ -15,5 +15,6 @@ export const LAYOUT = {
     CONFIG: "config.json",
     DEV_SERVER_STATE: "devServer.state.json",
     UPDATE_STATE: "update.state.json",
+    TEMPLATE_STATE: "templates.state.json",
   },
 } as const;

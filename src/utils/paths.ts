@@ -55,3 +55,11 @@ export async function getUpdateStatePath() {
 export async function getDevRuntimeDir() {
   return path.join(await getCacheDir(), LAYOUT.DIRS.DEV_RUNTIME);
 }
+
+export async function getTemplateStatePath() {
+  return path.join(await getDevDir(), LAYOUT.FILES.TEMPLATE_STATE);
+}
+
+export async function getTemplatesDir() {
+  return path.join(await getDevDir(), LAYOUT.DIRS.TEMPLATES);
+}
