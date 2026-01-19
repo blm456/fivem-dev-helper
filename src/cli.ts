@@ -3,6 +3,7 @@ import { CommandContext } from "./commands/command-context.js";
 import { registerCommands } from "./commands/register-commands.js";
 import { ensureInitialized } from "./config/init.js";
 import { mainMenu } from "./menus/main-menu.js";
+import { checkTemplatesAutoUpdate } from "./templates/updater.js";
 import { checkAutoUpdate } from "./updater/updater.js";
 import { initializeLogging } from "./utils/logging.js";
 
@@ -25,6 +26,7 @@ async function run() {
     run: async () => {
       await ensureInitialized();
       await checkAutoUpdate();
+      await checkTemplatesAutoUpdate();
       await mainMenu();
     },
   } satisfies CommandContext;
