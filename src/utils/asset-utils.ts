@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
-import { ensureDir, fsu } from "./file-utils.js";
+import { fsu } from "./file-utils.js";
 
 export function getCliAssetPath(relativePathFromPackageRoot: string) {
   const __filename = fileURLToPath(import.meta.url);
@@ -22,7 +22,7 @@ export async function installCliAssetToPath(
     throw new Error(
       `Unresolved asset path (${assetPathFromAssets}): ${assetPath}`,
     );
-  await ensureDir(path.dirname(target));
+  await fsu.ensureDir(path.dirname(target));
 
   await fs.copyFile(assetPath, target);
 }

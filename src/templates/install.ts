@@ -53,7 +53,7 @@ export async function installTemplate(type: TemplateType, target: string) {
   }
 
   // Perform extraction
-  extractZip(templatePath, { dir: target });
+  await extractZip(templatePath, { dir: target });
 }
 
 /** Guides through the folder selection process for a template */

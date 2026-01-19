@@ -68,3 +68,24 @@ export async function getTemplateStatePath() {
 export async function getTemplatesDir() {
   return path.join(await getDevDir(), LAYOUT.DIRS.TEMPLATES);
 }
+
+export function isPathChild(
+  target: string,
+  parent: string,
+  isRelative: boolean,
+  includeSelf: boolean = true,
+) {
+  let relativeTarget = target;
+  let absoluteTarget = target;
+
+  if (!isRelative) relativeTarget = path.relative(parent, target);
+  if (isRelative) absoluteTarget = path.join(parent, target);
+
+  if (absoluteTarget === parent) {
+    return includeSelf;
+  }
+
+  if (relativeTarget.startsWith("..")) return false;
+
+  return true;
+}
