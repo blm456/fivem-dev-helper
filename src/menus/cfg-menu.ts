@@ -1,6 +1,7 @@
-import { input } from "@inquirer/prompts";
+import { confirm, input } from "@inquirer/prompts";
 import {
   deleteCfgPreset,
+  doesCfgPresetExist,
   listCfgPresets,
   loadCfgPresetToResources,
   saveCfgPresetFromResources,
@@ -13,7 +14,7 @@ async function showCfgPresetMenu(name: string) {
     `${name} Preset`,
     [
       {
-        name: "Load Preset",
+        name: "🚀  Load Preset",
         async action() {
           const res = await loadCfgPresetToResources(name);
           console.print(`CFG preset "${name}" loaded!\n`);
@@ -24,8 +25,14 @@ async function showCfgPresetMenu(name: string) {
         },
       },
       {
-        name: "Delete Preset",
+        name: "🗑️   Delete Preset",
         async action() {
+          const c = await confirm({
+            message: `Are you sure you want to delete preset "${name}"?`,
+          });
+
+          if (!c) return await showCfgPresetMenu(name);
+
           await deleteCfgPreset(name);
           console.print(`CFG preset "${name}" deleted!\n`);
           await cfgMenu();
@@ -42,16 +49,14 @@ export async function cfgMenu() {
   await ShowMenuOptions(
     "Server CFG Presets",
     [
-      ...cfgs.map((cfg) => {
-        return {
-          name: cfg,
-          async action() {
-            await showCfgPresetMenu(cfg);
-          },
-        };
-      }),
+      ...cfgs.map((cfg) => ({
+        name: `⚙️   ${cfg}`,
+        async action() {
+          await showCfgPresetMenu(cfg);
+        },
+      })),
       {
-        name: "Save New Preset",
+        name: "🆕  Save New Preset",
         async action() {
           const presetName = await input({
             message:
@@ -59,13 +64,21 @@ export async function cfgMenu() {
           });
 
           if (presetName && presetName !== "") {
-            const res = await saveCfgPresetFromResources(presetName);
-
+            if (await doesCfgPresetExist(presetName)) {
+              const c = await confirm({
+                message:
+                  "CFG preset already saved with that name. Would you like to overwrite it?",
+              });
+              if (!c) return await cfgMenu();
+            }
+            const res = await saveCfgPresetFromResources(presetName, {
+              overwrite: true,
+            });
             console.print(`New CFG preset saved as "${presetName}"!\n`);
           }
           await cfgMenu();
         },
-        short: "New",
+        description: "Create a new preset from your current server.cfg",
       },
     ],
     mainMenu,

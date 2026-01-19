@@ -27,9 +27,9 @@ export async function ShowMenuOptions(
     .filter((c) => !c.disabled);
   if (onBackOption) {
     choices.push({
-      name: "Back",
+      name: "↩️   Back",
       value: choices.length,
-      description: "Go back to the previous menu",
+      description: "Go back to the previous menu.",
       short: undefined,
       disabled: false,
     });

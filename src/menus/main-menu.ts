@@ -13,6 +13,7 @@ export async function mainMenu() {
     {
       name: "⚡  Start Dev Server",
       disabled: status.running,
+      description: "Start local dev server instance",
       async action() {
         await startDevServer();
         await mainMenu();
@@ -21,17 +22,20 @@ export async function mainMenu() {
     {
       name: "🛑  Stop Dev Server",
       disabled: !status.running,
+      description: "Stop local dev server instance.",
       async action() {
         await stopDevServer();
         await mainMenu();
       },
     },
     {
-      name: "CFG Presets",
+      name: "📝  CFG Presets",
+      description: "Save/load server.cfg files",
       action: cfgMenu,
     },
     {
       name: "👋  Exit",
+      description: "Exit the application.",
       action() {
         process.exit(0);
       },
