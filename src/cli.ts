@@ -5,8 +5,6 @@ import { ensureInitialized } from "./config/init.js";
 import { mainMenu } from "./menus/main-menu.js";
 import { checkAutoUpdate } from "./updater/updater.js";
 import { initializeLogging } from "./utils/logging.js";
-import { getCliAssetPath } from "./utils/asset-utils.js";
-import { fsu } from "./utils/file-utils.js";
 
 async function run() {
   // Pre Command Init
