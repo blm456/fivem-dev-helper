@@ -23,9 +23,11 @@ export abstract class BaseCommand {
   protected commandAction(handler: (...args: any[]) => Promise<void>) {
     return (...args: any) => {
       void handler(...args).catch((err) => {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error(msg);
-        process.exit(1);
+        if (!(err instanceof Error) || err.name !== "ExitPromptError") {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error(msg);
+          process.exit(1);
+        }
       });
     };
   }

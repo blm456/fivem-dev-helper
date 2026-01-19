@@ -1,13 +1,12 @@
 import path from "path";
 import { loadConfig } from "../config/load-config.js";
-import { ensureDir, fsu } from "../utils/file-utils.js";
+import { fsu } from "../utils/file-utils.js";
 import { getTmpDir } from "../utils/paths.js";
+import { AppSpinner } from "../utils/spinner-utils.js";
 import { fetchLatestArtifact, ReleaseTier } from "./artifacts.js";
-import { loadUpdateState, saveUpdateState } from "./state.js";
-import { tmpdir } from "os";
 import { downloadFile } from "./download.js";
 import { installArtifact } from "./install.js";
-import ora from "ora";
+import { loadUpdateState, saveUpdateState } from "./state.js";
 
 export interface CheckOptions {
   force?: boolean;
@@ -54,12 +53,9 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
   const platform = config.fiveM.devPlatform;
   const tier =
     opts.tierOverride ?? mapConfigToTier(config.fiveM.releaseChannel);
-  const spinner = ora({
-    text: "Fetching artifacts...",
-    hideCursor: true,
-    indent: 1,
-  });
-  spinner.start();
+
+  const spinner = new AppSpinner("Fetching artifacts...", true);
+
   const latest = await fetchLatestArtifact(platform, tier);
 
   const installedVersion = state.installed?.version;
@@ -80,7 +76,7 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
     spinner.stop();
     return {
       checked: true,
-      updated: true,
+      updated: false,
       currentVersion: installedVersion,
       latestVersion: latest.version,
       message: `Update available (${tier}): ${installedVersion ?? "none"} -> ${latest.version}`,
@@ -88,17 +84,17 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
   }
 
   const tmpDir = await getTmpDir();
-  await ensureDir(tmpDir);
+  await fsu.ensureDir(tmpDir);
 
   const archivePath = path.join(
     tmpDir,
     `${latest.platform}-${latest.tier}-${latest.version}-${latest.filename}`,
   );
 
-  spinner.text = "Downloading update...";
+  spinner.update("Downloading update...");
   await downloadFile(latest.url, archivePath);
 
-  spinner.text = "Installing update...";
+  spinner.update("Installing update...");
   await installArtifact(latest, archivePath, {
     targetDir: config.paths.serverBinaries,
     tmpDir,
@@ -129,6 +125,6 @@ export async function checkAutoUpdate() {
   const res = await checkForUpdates({ force: false, installIfNew: true });
 
   if (res.checked) {
-    console.log("[Auto Updater]", res.message);
+    console.log("[Auto FiveM Updater]", res.message);
   }
 }

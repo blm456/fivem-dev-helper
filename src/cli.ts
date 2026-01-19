@@ -3,10 +3,9 @@ import { CommandContext } from "./commands/command-context.js";
 import { registerCommands } from "./commands/register-commands.js";
 import { ensureInitialized } from "./config/init.js";
 import { mainMenu } from "./menus/main-menu.js";
+import { checkTemplatesAutoUpdate } from "./templates/updater.js";
 import { checkAutoUpdate } from "./updater/updater.js";
 import { initializeLogging } from "./utils/logging.js";
-import { getCliAssetPath } from "./utils/asset-utils.js";
-import { fsu } from "./utils/file-utils.js";
 
 async function run() {
   // Pre Command Init
@@ -27,6 +26,7 @@ async function run() {
     run: async () => {
       await ensureInitialized();
       await checkAutoUpdate();
+      await checkTemplatesAutoUpdate();
       await mainMenu();
     },
   } satisfies CommandContext;
@@ -52,9 +52,7 @@ async function run() {
 }
 
 process.on("uncaughtException", (error) => {
-  if (error instanceof Error && error.name === "ExitPromptError") {
-    console.print("👋 until next time!");
-  } else {
+  if (error instanceof Error && error.name !== "ExitPromptError") {
     // Rethrow unknown errors
     throw error;
   }

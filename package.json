@@ -29,6 +29,7 @@
     "execa": "^9.6.1",
     "extract-zip": "^2.0.1",
     "figlet": "^1.9.4",
+    "inquirer-file-selector": "^1.0.1",
     "ora": "^9.0.0",
     "zod": "^4.3.5"
   },

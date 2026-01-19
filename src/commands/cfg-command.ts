@@ -8,6 +8,7 @@ import {
   loadDefaultCfgFile,
   saveCfgPresetFromResources,
 } from "../server/cfg-preset.js";
+import chalk from "chalk";
 
 export class CfgCommand extends BaseCommand {
   register(program: Command, ctx: CommandContext): void {
@@ -26,7 +27,10 @@ export class CfgCommand extends BaseCommand {
             console.print("No presets found.");
             return;
           }
-          for (const p of presets) console.print(p);
+
+          console.print(chalk.underline("\nAvailable CFG presets:"));
+
+          for (const p of presets) console.print("*", p);
         }),
       );
 

@@ -26,7 +26,7 @@ export class UpdateCommand extends BaseCommand {
       .addOption(
         new Option(
           "-f, --force",
-          "Force the update even if already installed",
+          "Forces the update even if the same version is installed",
         ).default(false),
       )
       .action(
@@ -43,7 +43,7 @@ export class UpdateCommand extends BaseCommand {
               installIfNew: options.install,
               ignoreTimeCheck: true,
             });
-            console.log(res);
+            console.log("[Auto FiveM Updater]", res.message);
           },
         ),
       );

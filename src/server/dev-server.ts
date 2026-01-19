@@ -147,26 +147,6 @@ export async function startDevServer(): Promise<void> {
 
   // WINDOWS: Start FXServer with PowerShell, get the actual PID via -PassThru
   if (process.platform === "win32") {
-    // Start-Process opens a new window by default for console apps when not -NoNewWindow
-    // We also set WorkingDirectory to server binaries path.
-    const psArgs = [
-      "-NoProfile",
-      "-Command",
-      [
-        "$p = Start-Process",
-        `-FilePath "${exePath.replaceAll('"', '""')}"`,
-        exeArgs.length
-          ? `-ArgumentList ${exeArgs.map((a) => `"${a.replaceAll('"', '""')}"`).join(",")}`
-          : "",
-        `-WorkingDirectory "${runtimeDir.replaceAll('"', '""').replaceAll("\\", "/")}"`,
-        "-PassThru",
-        ";",
-        "$p.Id",
-      ]
-        .filter(Boolean)
-        .join(" "),
-    ];
-
     const psScript = `
     $argList = @(${exeArgs.map((a) => `'${psEscapeSingleQuoted(a)}'`).join(", ")});
     $p = Start-Process -FilePath '${psEscapeSingleQuoted(exePath)}' -WorkingDirectory '${psEscapeSingleQuoted(runtimeDir)}' -ArgumentList $argList -PassThru;
@@ -274,7 +254,7 @@ export async function stopDevServer(): Promise<void> {
       }
     }
     await clearState();
-    await fsu.emptyDir(".fivem-dev/cache");
+    await fsu.emptyDir(await getDevRuntimeDir());
     return;
   }
 
@@ -303,7 +283,7 @@ export async function stopDevServer(): Promise<void> {
       }
     }
     await clearState();
-    await fsu.emptyDir(".fivem-dev/cache");
+    await fsu.emptyDir(await getDevRuntimeDir());
     return;
   }
 
@@ -330,5 +310,5 @@ export async function stopDevServer(): Promise<void> {
   }
 
   await clearState();
-  await fsu.emptyDir(".fivem-dev/cache");
+  await fsu.emptyDir(await getDevRuntimeDir());
 }
