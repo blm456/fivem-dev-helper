@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import { Command, Option } from "commander";
 import path from "path";
-import { loadConfig } from "../config/load-config.js";
 import { templateMenu } from "../menus/template-menu.js";
 import { getTemplateList, getTemplateVersion } from "../templates/artifacts.js";
 import {
@@ -10,6 +9,7 @@ import {
 } from "../templates/install.js";
 import { checkForTemplateUpdates } from "../templates/updater.js";
 import { fsu } from "../utils/file-utils.js";
+import { getResourcesDir } from "../utils/paths.js";
 import { AppSpinner } from "../utils/spinner-utils.js";
 import { BaseCommand } from "./base-command.js";
 import { CommandContext } from "./command-context.js";
@@ -130,7 +130,7 @@ export class TemplateCommand extends BaseCommand {
             /** COMMAND LINE CREATION */
 
             // Load the config and list of templates
-            const config = await loadConfig();
+            const resourcePath = await getResourcesDir();
             const templates = await getTemplateList();
 
             // Validate path
@@ -156,7 +156,7 @@ export class TemplateCommand extends BaseCommand {
             }
 
             // Get the absolute installation path
-            const installPath = path.join(config.paths.resources, rawPath!);
+            const installPath = path.join(resourcePath, rawPath!);
 
             // Ensure the directory exists (Should already be called in validate template path)
             await fsu.ensureDir(installPath);

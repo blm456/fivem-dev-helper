@@ -3,8 +3,10 @@ import {
   startDevServer,
   stopDevServer,
 } from "../server/dev-server.js";
+import { getAllTypedResources } from "../typegen/generate.js";
 import { ShowMenuOptions } from "../utils/menu-utils.js";
 import { cfgMenu } from "./cfg-menu.js";
+import { generatedMenu } from "./generated-menu.js";
 import { templateMenu } from "./template-menu.js";
 
 export async function mainMenu() {
@@ -39,6 +41,19 @@ export async function mainMenu() {
       description: "Create new FiveM resources from a template.",
       async action() {
         await templateMenu();
+      },
+    },
+    {
+      name: "🗂️   Generate Types",
+      description: "Generate global types to be used across resources",
+      async action() {
+        await getAllTypedResources();
+      },
+    },
+    {
+      name: "🧩  Generated Content",
+      async action() {
+        await generatedMenu();
       },
     },
     {

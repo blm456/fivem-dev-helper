@@ -1,14 +1,13 @@
+import chalk from "chalk";
 import { Command } from "commander";
-import { BaseCommand } from "./base-command.js";
-import { CommandContext } from "./command-context.js";
 import {
   deleteCfgPreset,
   listCfgPresets,
   loadCfgPresetToResources,
-  loadDefaultCfgFile,
   saveCfgPresetFromResources,
 } from "../server/cfg-preset.js";
-import chalk from "chalk";
+import { BaseCommand } from "./base-command.js";
+import { CommandContext } from "./command-context.js";
 
 export class CfgCommand extends BaseCommand {
   register(program: Command, ctx: CommandContext): void {
@@ -76,21 +75,6 @@ export class CfgCommand extends BaseCommand {
           await this.requireProject(ctx);
           await deleteCfgPreset(name);
           console.print(`Deleted preset: ${name}`);
-        }),
-      );
-
-    cfg
-      .command("default")
-      .description("Load the default server.cfg file")
-      .action(
-        this.commandAction(async () => {
-          this.requireProject(ctx);
-          const res = await loadDefaultCfgFile();
-          console.print(`Default server.cfg loaded to: ${res.targetPath}`);
-
-          if (res.backupPath) {
-            console.print(`\nLast CFG file backed up to: ${res.backupPath}`);
-          }
         }),
       );
   }

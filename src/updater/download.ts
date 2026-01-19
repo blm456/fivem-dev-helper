@@ -1,5 +1,5 @@
 import { createWriteStream } from "fs";
-import { ensureDir, fsu } from "../utils/file-utils.js";
+import { fsu } from "../utils/file-utils.js";
 import fs from "fs/promises";
 import { Readable } from "stream";
 import { pipeline } from "stream/promises";
@@ -38,7 +38,7 @@ async function renameWithRetries(from: string, to: string, attempts = 0) {
 
   // Fallback: copy then unlink
   try {
-    await ensureDir(path.dirname(to));
+    await fsu.ensureDir(path.dirname(to));
     await fs.copyFile(from, to);
     await fs.unlink(from);
   } catch (err) {

@@ -3,6 +3,13 @@ import { findProjectRoot } from "./project-root.js";
 import { LAYOUT } from "../constants/layout.js";
 import { loadConfig } from "../config/load-config.js";
 
+export type TypesDirData = {
+  base: string;
+  client: string;
+  server: string;
+  shared: string;
+};
+
 export async function getProjectRoot() {
   return await findProjectRoot();
 }
@@ -27,6 +34,11 @@ export async function getDevStatePath() {
   return path.join(await getDevDir(), LAYOUT.FILES.DEV_SERVER_STATE);
 }
 
+export async function getServerBinaries() {
+  const cfg = await loadConfig();
+  return cfg.paths.serverBinaries;
+}
+
 export async function getResourcesDir() {
   const cfg = await loadConfig();
   return cfg.paths.resources;
@@ -48,6 +60,17 @@ export async function getTmpDir() {
   return path.join(await getDevDir(), LAYOUT.DIRS.TMP);
 }
 
+export async function getTypesDir() {
+  const typeDir = path.join(await getDevDir(), "types");
+
+  return {
+    base: typeDir,
+    client: path.join(typeDir, "client"),
+    server: path.join(typeDir, "server"),
+    shared: path.join(typeDir, "shared"),
+  };
+}
+
 export async function getUpdateStatePath() {
   return path.join(await getDevDir(), LAYOUT.FILES.UPDATE_STATE);
 }
@@ -62,4 +85,25 @@ export async function getTemplateStatePath() {
 
 export async function getTemplatesDir() {
   return path.join(await getDevDir(), LAYOUT.DIRS.TEMPLATES);
+}
+
+export function isPathChild(
+  target: string,
+  parent: string,
+  isRelative: boolean,
+  includeSelf: boolean = true,
+) {
+  let relativeTarget = target;
+  let absoluteTarget = target;
+
+  if (!isRelative) relativeTarget = path.relative(parent, target);
+  if (isRelative) absoluteTarget = path.join(parent, target);
+
+  if (absoluteTarget === parent) {
+    return includeSelf;
+  }
+
+  if (relativeTarget.startsWith("..")) return false;
+
+  return true;
 }

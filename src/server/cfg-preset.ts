@@ -1,4 +1,4 @@
-import { fsu, pathExists } from "../utils/file-utils.js";
+import { fsu } from "../utils/file-utils.js";
 import { promises as fs } from "fs";
 import {
   getCfgPresetDir,
@@ -65,7 +65,7 @@ export async function saveCfgPresetFromResources(
     );
 
   const targetPresetPath = await getCfgPresetPath(name);
-  if (!opts?.overwrite && (await pathExists(targetPresetPath)))
+  if (!opts?.overwrite && (await fsu.pathExists(targetPresetPath)))
     throw new Error(
       "Preset already exists with that path and overwriting is false",
     );
@@ -81,7 +81,7 @@ export async function loadCfgPresetToResources(
   const name = validatePresetName(nameRaw);
 
   const presetPath = await getCfgPresetPath(name);
-  if (!(await pathExists(presetPath))) {
+  if (!(await fsu.pathExists(presetPath))) {
     throw new Error(`Preset "${name}" not found at: ${presetPath}`);
   }
 
@@ -89,7 +89,7 @@ export async function loadCfgPresetToResources(
   await fsu.ensureDir(path.dirname(targetPath));
 
   let backupPath: string | undefined;
-  if (await pathExists(targetPath)) {
+  if (await fsu.pathExists(targetPath)) {
     backupPath = `${targetPath}.bak.${nowStamp()}`;
     await fs.copyFile(targetPath, backupPath);
   }
@@ -104,7 +104,7 @@ export async function deleteCfgPreset(nameRaw: string): Promise<void> {
   const name = validatePresetName(nameRaw);
   const presetPath = await getCfgPresetPath(name);
 
-  if (!(await pathExists(presetPath))) {
+  if (!(await fsu.pathExists(presetPath))) {
     throw new Error(`Preset "${name}" not found.`);
   }
   await fsu.remove(presetPath);
@@ -115,7 +115,7 @@ export async function loadDefaultCfgFile() {
   await fsu.ensureDir(path.dirname(targetPath));
 
   let backupPath: string | undefined;
-  if (await pathExists(targetPath)) {
+  if (await fsu.pathExists(targetPath)) {
     backupPath = `${targetPath}.bak.${nowStamp()}`;
     await fs.copyFile(targetPath, backupPath);
   }
