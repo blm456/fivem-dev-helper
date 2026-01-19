@@ -5,6 +5,7 @@ import { InitCommand } from "./init-command.js";
 import { RemoveCommand } from "./remove-command.js";
 import { RunCommand } from "./run-command.js";
 import { TemplateCommand } from "./template-command.js";
+import { TypesCommand } from "./types-command.js";
 import { UpdateCommand } from "./update-command.js";
 
 export const COMMANDS: BaseCommand[] = [
@@ -14,5 +15,6 @@ export const COMMANDS: BaseCommand[] = [
   new RemoveCommand(),
   new RunCommand(),
   new TemplateCommand(),
+  new TypesCommand(),
   new UpdateCommand(),
 ];

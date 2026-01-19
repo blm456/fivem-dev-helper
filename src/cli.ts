@@ -56,6 +56,7 @@ process.on("uncaughtException", (error) => {
     // Rethrow unknown errors
     throw error;
   }
+  process.exit(0);
 });
 
 run().catch((err) => {

@@ -3,6 +3,13 @@ import { findProjectRoot } from "./project-root.js";
 import { LAYOUT } from "../constants/layout.js";
 import { loadConfig } from "../config/load-config.js";
 
+export type TypesDirData = {
+  base: string;
+  client: string;
+  server: string;
+  shared: string;
+};
+
 export async function getProjectRoot() {
   return await findProjectRoot();
 }
@@ -51,6 +58,17 @@ export async function getCfgPresetPath(name: string) {
 
 export async function getTmpDir() {
   return path.join(await getDevDir(), LAYOUT.DIRS.TMP);
+}
+
+export async function getTypesDir() {
+  const typeDir = path.join(await getDevDir(), "types");
+
+  return {
+    base: typeDir,
+    client: path.join(typeDir, "client"),
+    server: path.join(typeDir, "server"),
+    shared: path.join(typeDir, "shared"),
+  };
 }
 
 export async function getUpdateStatePath() {

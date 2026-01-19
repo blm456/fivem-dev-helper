@@ -1,6 +1,6 @@
 import fs from "fs/promises";
 import extractZip from "extract-zip";
-import { ensureDir, fsu } from "../utils/file-utils.js";
+import { fsu } from "../utils/file-utils.js";
 import { LatestArtifact } from "./artifacts.js";
 import path from "path";
 import { execa } from "execa";
@@ -35,7 +35,7 @@ export async function installArtifact(
   archivePath: string,
   opts: InstallOptions,
 ) {
-  await ensureDir(opts.tmpDir);
+  await fsu.ensureDir(opts.tmpDir);
 
   const staging = path.join(
     opts.tmpDir,
