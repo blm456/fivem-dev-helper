@@ -25,6 +25,16 @@ export async function emptyDir(dir: string): Promise<void> {
   }
 }
 
+export async function isEmpty(dir: string) {
+  try {
+    const entries = await fs.readdir(dir);
+    return entries.length === 0;
+  } catch (err: any) {
+    if (err.code !== "ENOENT") throw err;
+  }
+  return false;
+}
+
 /** read JSON with proper typing */
 export async function readJson<T>(file: string): Promise<T> {
   const raw = await fs.readFile(file, "utf8");
@@ -51,6 +61,7 @@ export class fsu {
   public static ensureDir = ensureDir;
   public static remove = remove;
   public static emptyDir = emptyDir;
+  public static isEmpty = isEmpty;
   public static readJson = readJson;
   public static writeJson = writeJson;
   public static pathExists = pathExists;

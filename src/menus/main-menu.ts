@@ -5,6 +5,7 @@ import {
 } from "../server/dev-server.js";
 import { ShowMenuOptions } from "../utils/menu-utils.js";
 import { cfgMenu } from "./cfg-menu.js";
+import { templateMenu } from "./template-menu.js";
 
 export async function mainMenu() {
   const status = await getDevServerStatus();
@@ -32,6 +33,13 @@ export async function mainMenu() {
       name: "📝  CFG Presets",
       description: "Save/load server.cfg files",
       action: cfgMenu,
+    },
+    {
+      name: "📜  Resource Templates",
+      description: "Create new FiveM resources from a template.",
+      async action() {
+        await templateMenu();
+      },
     },
     {
       name: "👋  Exit",
