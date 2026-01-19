@@ -39,6 +39,16 @@ export async function listCfgPresets() {
     .sort((a, b) => a.localeCompare(b));
 }
 
+export async function doesCfgPresetExist(nameRaw: string) {
+  const name = validatePresetName(nameRaw);
+
+  const presetDir = await getCfgPresetDir();
+  await fsu.ensureDir(presetDir);
+
+  const sourceCfgPath = await getResourcesServerCfgPath();
+  return await fsu.pathExists(sourceCfgPath);
+}
+
 export async function saveCfgPresetFromResources(
   nameRaw: string,
   opts?: { overwrite?: boolean },
