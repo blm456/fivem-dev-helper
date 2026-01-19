@@ -52,9 +52,7 @@ async function run() {
 }
 
 process.on("uncaughtException", (error) => {
-  if (error instanceof Error && error.name === "ExitPromptError") {
-    console.print("👋 until next time!");
-  } else {
+  if (error instanceof Error && error.name !== "ExitPromptError") {
     // Rethrow unknown errors
     throw error;
   }
