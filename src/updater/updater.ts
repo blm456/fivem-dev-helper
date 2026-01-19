@@ -130,6 +130,6 @@ export async function checkAutoUpdate() {
   const res = await checkForUpdates({ force: false, installIfNew: true });
 
   if (res.checked) {
-    console.log("[Auto Updater]", res.message);
+    console.log("[Auto FiveM Updater]", res.message);
   }
 }
