@@ -81,7 +81,7 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
     spinner.stop();
     return {
       checked: true,
-      updated: true,
+      updated: false,
       currentVersion: installedVersion,
       latestVersion: latest.version,
       message: `Update available (${tier}): ${installedVersion ?? "none"} -> ${latest.version}`,
