@@ -254,7 +254,7 @@ export async function stopDevServer(): Promise<void> {
       }
     }
     await clearState();
-    await fsu.emptyDir(".fivem-dev/cache");
+    await fsu.emptyDir(await getDevRuntimeDir());
     return;
   }
 
@@ -283,7 +283,7 @@ export async function stopDevServer(): Promise<void> {
       }
     }
     await clearState();
-    await fsu.emptyDir(".fivem-dev/cache");
+    await fsu.emptyDir(await getDevRuntimeDir());
     return;
   }
 
@@ -310,5 +310,5 @@ export async function stopDevServer(): Promise<void> {
   }
 
   await clearState();
-  await fsu.emptyDir(".fivem-dev/cache");
+  await fsu.emptyDir(await getDevRuntimeDir());
 }
