@@ -1,14 +1,14 @@
+import fs from "fs/promises";
 import path from "path";
 import { loadConfig } from "../config/load-config.js";
 import { fsu } from "../utils/file-utils.js";
-import fs from "fs/promises";
 import { getTemplatesDir, getTmpDir } from "../utils/paths.js";
+import { AppSpinner } from "../utils/spinner-utils.js";
 import {
   downloadLatestReleaseZip,
   fetchLatestTemplateArtifact,
 } from "./artifacts.js";
 import { loadTemplateState, saveTemplateState } from "./state.js";
-import ora from "ora";
 
 export interface TemplateCheckOptions {
   force?: boolean;
@@ -45,13 +45,7 @@ export async function checkForTemplateUpdates(
   state.lastCheck = now;
   await saveTemplateState(state);
 
-  const spinner = ora({
-    text: "Fetching latest template version...",
-    hideCursor: true,
-    indent: 1,
-  });
-
-  spinner.start();
+  const spinner = new AppSpinner("Fetching latest template version...", true);
 
   const latestArtifact = await fetchLatestTemplateArtifact();
 
@@ -83,14 +77,14 @@ export async function checkForTemplateUpdates(
   const tmpDir = await getTmpDir();
   await fsu.ensureDir(tmpDir);
 
-  spinner.text = "Downloading templates update...";
+  spinner.update("Downloading templates update...");
 
   const result = await downloadLatestReleaseZip({
     outputDir: tmpDir,
     releaseData: latestArtifact,
   });
 
-  spinner.text = "Installing template update...";
+  spinner.update("Installing template update...");
 
   const templateDir = await getTemplatesDir();
   await fsu.ensureDir(templateDir);

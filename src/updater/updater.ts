@@ -1,8 +1,8 @@
-import ora from "ora";
 import path from "path";
 import { loadConfig } from "../config/load-config.js";
 import { fsu } from "../utils/file-utils.js";
 import { getTmpDir } from "../utils/paths.js";
+import { AppSpinner } from "../utils/spinner-utils.js";
 import { fetchLatestArtifact, ReleaseTier } from "./artifacts.js";
 import { downloadFile } from "./download.js";
 import { installArtifact } from "./install.js";
@@ -54,13 +54,8 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
   const tier =
     opts.tierOverride ?? mapConfigToTier(config.fiveM.releaseChannel);
 
-  const spinner = ora({
-    text: "Fetching artifacts...",
-    hideCursor: true,
-    indent: 1,
-  });
+  const spinner = new AppSpinner("Fetching artifacts...", true);
 
-  spinner.start();
   const latest = await fetchLatestArtifact(platform, tier);
 
   const installedVersion = state.installed?.version;
@@ -96,10 +91,10 @@ export async function checkForUpdates(opts: CheckOptions = {}): Promise<{
     `${latest.platform}-${latest.tier}-${latest.version}-${latest.filename}`,
   );
 
-  spinner.text = "Downloading update...";
+  spinner.update("Downloading update...");
   await downloadFile(latest.url, archivePath);
 
-  spinner.text = "Installing update...";
+  spinner.update("Installing update...");
   await installArtifact(latest, archivePath, {
     targetDir: config.paths.serverBinaries,
     tmpDir,
